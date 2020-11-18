@@ -700,7 +700,7 @@ function release_language_chooser($currentlang) {
         'en'    => 'English',
 //        'pt_BR' => 'Brazilian Portuguese',
 //        'zh'    => 'Chinese (Simplified)',
-//        'nl'    => 'Dutch',
+        'nl'    => 'Dutch',
 //        'fr'    => 'French',
 //        'de'    => 'German',
         'ru'    => 'Russian',
