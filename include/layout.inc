@@ -702,7 +702,7 @@ function release_language_chooser($currentlang) {
 //        'zh'    => 'Chinese (Simplified)',
 //        'nl'    => 'Dutch',
 //        'fr'    => 'French',
-//        'de'    => 'German',
+        'de'    => 'German',
         'ru'    => 'Russian',
     );
 
