@@ -29,8 +29,8 @@ site_header("PHP 8.0.0 Release Announcement", array(
     </div>
     <div class="php8-title">released!</div>
     <div class="php8-subtitle">
-      PHP 8.0 is een grote update van de programmeertaal PHP.<br class="display-none-md"> Het bevat vele nieuwe
-      functionaliteiten en optimalisaties zoals named arguments, union types, attributes, constructor property
+      PHP 8.0 is de nieuwste versie van de programmeertaal PHP.<br class="display-none-md"> Het zit vol met nieuwe
+      functionaliteit en optimalisaties zoals named arguments, union types, attributes, constructor property
       promotion, match expression, nullsafe operator, een JIT en verbeteringen in het type system, de fout-afhandeling
       en algehele consistentie.
     </div>
@@ -64,7 +64,7 @@ site_header("PHP 8.0.0 Release Announcement", array(
     <div class="php8-compare__content">
       <ul>
         <li>Specificeer alleen nog maar vereiste parameters, en skip alle optionele.</li>
-        <li>Named arguments zijn volgorde-onafhanklijk en documenteren zichzelf.</li>
+        <li>Named arguments zijn volgorde-onafhankelijk en documenteren zichzelf.</li>
       </ul>
     </div>
   </div>
@@ -96,7 +96,7 @@ class User
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>In plaats van PHPDoc commentaar kun je nu gestructureerd meta-data opnemen met deze nieuwe PHP syntax.</p>
+      <p>In plaats van PHPDoc commentaar kun je nu gestructureerde meta-data opnemen met deze nieuwe PHP syntax.</p>
     </div>
   </div>
 
@@ -119,9 +119,9 @@ class User
      float $y = 0.0,
      float $z = 0.0,
  ) {
-     $this->x = $x;
-     $this->y = $y;
-     $this->z = $z;
+     $this-&gt;x = $x;
+     $this-&gt;y = $y;
+     $this-&gt;z = $z;
  }
 }</pre>
         </div>
@@ -141,7 +141,7 @@ class User
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Minder franje voor het definiëren en initialiseren van objecten.</p>
+      <p>Minder franje nodig voor het definiëren en initialiseren van objecten.</p>
     </div>
   </div>
 
@@ -226,8 +226,8 @@ echo $result;
       <p>De nieuwe match lijkt op een switch, maar heeft de volgende afwijkende eigenschappen:</p>
       <ul>
         <li>Match is een expressie, wat betekent dat het resultaat opgeslagen kan worden in een variabele, of kan worden teruggestuurd.</li>
-        <li>Match blokken ondersteunen slechts een enkele regel als expressie en ze hebben geen break; statement nodig.</li>
-        <li>Match vergelijkt strict.</li>
+        <li>Match blokken bestaan uit een enkele regel en hebben geen break; statement nodig.</li>
+        <li>Match vergelijkt altijd strict.</li>
       </ul>
     </div>
   </div>
@@ -265,7 +265,7 @@ if ($session !== null) {
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>In plaats van allemaal losse controles op null kun je nu elementen blijven chainen met de nieuwe nullsafe operator. Wanneer
+      <p>In plaats van allemaal losse controles op nulls kun je nu elementen blijven chainen met de nieuwe nullsafe operator. Wanneer
         het evalueren van één van de elementen faalt, faalt de hele chain direct en evalueert deze naar null.</p>
     </div>
   </div>
@@ -291,8 +291,9 @@ if ($session !== null) {
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Bij het vergelijken met een numerieke string gebruikt PHP 8 een numerieke vergelijking. Bij vergelijken met
-        niet numerieke strings converteert PHP 8 het nummer naar een string en vergelijkt ze zodanig.</p>
+	  <p>Als je in PHP 8 iets met een string vergelijkt, is de vergelijking afhankelijk van de waarde van de string. Als deze
+        numeriek is wordt een numerieke vergelijking gebruikt, anders wordt het nummer naar string omgezet en worden deze als
+        strings vergeleken.</p>
     </div>
   </div>
 
@@ -321,7 +322,7 @@ array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>De meeste interne functies gooien nu Fatal Error excepties wanneer de validatie van een parameter faalt.</p>
+      <p>De meeste PHP functies gooien nu Fatal Error excepties wanneer de validatie van een parameter faalt.</p>
     </div>
   </div>
 </section>
@@ -330,7 +331,7 @@ array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be
   <h2 class="php8-h2">Just-In-Time compilation</h2>
   <p>
     PHP 8 bevat twee nieuwe JIT compilers. De meest veelbelovende, Tracing JIT, heeft in synthetische tests een driemaal
-    betere performance en in een aantal specifieke lang-draaiende applicaties een 1.5 tot tweemal beter performance.
+    betere performance en in een aantal specifieke lang-draaiende applicaties een 1.5 tot tweemaal beter performance.
     Typische applicaties draaien minimaal even goed als op PHP 7.4.
   </p>
   <p>
@@ -448,7 +449,7 @@ array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be
     <h2 class="php8-h2 center">
       Krijg gratis beter performance.<br class="display-none-lg display-block-md">
       Krijg een betere syntax.<br class="display-block-lg display-none-md display-block-sm">
-      Krijg meer type veiligheid.
+      Krijg betere type-controle.
     </h2>
     <div class="php8-button-wrapper center">
       <a class="php8-button php8-button_light" href="#">Update naar PHP 8!</a>
