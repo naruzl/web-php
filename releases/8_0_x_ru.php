@@ -3,13 +3,11 @@ $_SERVER['BASE_PAGE'] = 'releases/8_0_x_ru.php';
 include_once __DIR__ . '/../include/prepend.inc';
 
 if ($LANG === 'en') {
-    mirror_redirect("/releases/8_0_x.php?lang=$LANG");
-    exit();
+    mirror_redirect('/releases/8_0_x.php?lang=' . urlencode($LANG));
 }
 
-if ($LANG !== 'ru' && file_exists("8_0_x_$LANG.php")) {
-    mirror_redirect("/releases/8_0_x_$LANG.php?lang=$LANG");
-    exit();
+if (($LANG !== 'ru') && file_exists(__DIR__ . '/8_0_x_' . basename($LANG) . '.php')) {
+    mirror_redirect('/releases/8_0_x_' . urlencode($LANG) . '.php?lang=' . urlencode($LANG));
 }
 
 site_header("PHP 8.0.0, релиз", array(
@@ -20,16 +18,12 @@ site_header("PHP 8.0.0, релиз", array(
         )
 ));
 ?>
-
-<section>
-    <div class="page-tools">
-        <div class="change-language">
-            <?php echo release_language_chooser($LANG); ?>
-        </div>
-    </div>
-</section>
-
 <section class="php8-section php8-section_dark php8-section_header center">
+  <div class="page-tools">
+    <div class="change-language">
+        <?php echo release_language_chooser($LANG); ?>
+    </div>
+  </div>
   <div class="php8-section__content">
     <div class="php8-logo">
       <img src="/images/php8/logo_php8.svg" alt="php8" height="126" width="343">
@@ -37,11 +31,11 @@ site_header("PHP 8.0.0, релиз", array(
     <div class="php8-title">релизнут!</div>
     <div class="php8-subtitle">
       PHP 8.0 — большое обновление PHP.<br class="display-none-md"> Оно содержит множество новых возможностей и
-      оптимизаций, включая именованные аргументы, union type, атрибуты, constructor property promotion, выражение match,
-      nullsafe оператор, JIT и улучшения в системе типов, обработке ошибок и консистентности.
+      оптимизаций, включая именованные аргументы, union type, атрибуты, упрощённое определение свойств в конструкторе, выражение match,
+      оператор nullsafe, JIT и улучшения в системе типов, обработке ошибок и консистентности.
     </div>
     <div class="php8-button-wrapper center">
-      <a class="php8-button php8-button_light" href="#">Переходите на PHP 8!</a>
+      <a class="php8-button php8-button_light" href="/downloads">Переходите на PHP 8!</a>
     </div>
   </div>
 </section>
@@ -56,20 +50,24 @@ site_header("PHP 8.0.0, релиз", array(
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-          <pre>htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'UTF-8', false);</pre>
+            <?php highlight_php_trimmed(
+                'htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, \'UTF-8\', false);'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-          <pre>htmlspecialchars($string, double_encode: false);</pre>
+            <?php highlight_php_trimmed(
+                'htmlspecialchars($string, double_encode: false);'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
       <ul>
-        <li>Указывайте только необходимые параметры, пропускайте опциональные.</li>
+        <li>Указывайте только необходимые параметры, пропускайте необязательные.</li>
         <li>Порядок аргументов не важен, аргументы самодокументируемы.</li>
       </ul>
     </div>
@@ -84,349 +82,370 @@ site_header("PHP 8.0.0, релиз", array(
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-<pre>/**
+            <?php highlight_php_trimmed(
+                '/**
 * @Route("/api/posts/{id}", methods={"GET", "HEAD"})
 */
-classUser
-{</pre>
+class User
+{'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-<pre>#[Route("/api/posts/{id}", methods: ["GET", "HEAD"])]
+            <?php highlight_php_trimmed(
+                '#[Route("/api/posts/{id}", methods: ["GET", "HEAD"])]
 class User
-{</pre>
+{'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Вместо аннотаций PHPDoc вы можете использовать структурные метаданные в с нативным PHP синтаксисом.</p>
+      <p>Вместо аннотаций PHPDoc вы можете использовать структурные метаданные с нативным синтаксисом PHP.</p>
     </div>
   </div>
 
   <div class="php8-compare">
     <h2 class="php8-h2" id="constructor-property-promotion">
-      Constructor property promotion
+      Объявление свойств в конструкторе
       <a class="php8-rfc" href="https://wiki.php.net/rfc/constructor_promotion">RFC</a>
     </h2>
     <div class="php8-compare__main">
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-<pre>class Point {
- public float $x;
- public float $y;
- public float $z;
+            <?php highlight_php_trimmed(
+                'class Point {
+  public float $x;
+  public float $y;
+  public float $z;
 
- public function __construct(
-     float $x = 0.0,
-     float $y = 0.0,
-     float $z = 0.0,
- ) {
-     $this->x = $x;
-     $this->y = $y;
-     $this->z = $z;
- }
-}</pre>
+  public function __construct(
+    float $x = 0.0,
+    float $y = 0.0,
+    float $z = 0.0,
+  ) {
+    $this->x = $x;
+    $this->y = $y;
+    $this->z = $z;
+  }
+}'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-<pre>class Point {
- public function __construct(
-     public float $x = 0.0,
-     public float $y = 0.0,
-     public float $z = 0.0,
- ) {}
-}</pre>
+            <?php highlight_php_trimmed(
+                'class Point {
+  public function __construct(
+    public float $x = 0.0,
+    public float $y = 0.0,
+    public float $z = 0.0,
+  ) {}
+}'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Less boilerplate code for defining and initializing properties.</p>
+      <p>Меньше шаблонного кода для определения и инициализации свойств.</p>
     </div>
   </div>
 
   <div class="php8-compare">
     <h2 class="php8-h2" id="union-types">
       Union types
-      <a class="php8-rfc" href="https://wiki.php.net/rfc/union_types_v2">RFC</a>
+      <a class="php8-rfc" href="https://wiki.php.net/rfc/union_types_v2">RFC</a> <a class="php8-rfc" href="/manual/ru/language.types.declarations.php#language.types.declarations.union">Doc</a>
     </h2>
     <div class="php8-compare__main">
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-<pre>class Number {
- /** @var int|float */
- private $number;
+            <?php highlight_php_trimmed(
+                'class Number {
+  /** @var int|float */
+  private $number;
 
- /**
-  * @param float|int $number
-  */
- public function __construct($number) {
-     $this->number = $number;
- }
+  /**
+   * @param float|int $number
+   */
+  public function __construct($number) {
+    $this->number = $number;
+  }
 }
 
-new Number('NaN'); // Ok</pre>
+new Number(\'NaN\'); // Нет ошибки'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-<pre>class Number {
- public function __construct(
-     private int|float $number
- ) {}
+            <?php highlight_php_trimmed(
+                'class Number {
+  public function __construct(
+    private int|float $number
+  ) {}
 }
 
-new Number('NaN'); // TypeError</pre>
+new Number(\'NaN\'); // TypeError'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Instead of PHPDoc annotations for a combination of types, you can use native union type declarations that are
-        validated at runtime.</p>
+      <p>Вместо аннотаций PHPDoc для объединенных типов вы можете использовать объявления union type, которые
+        проверяются во время выполнения.</p>
     </div>
   </div>
 
   <div class="php8-compare">
     <h2 class="php8-h2" id="match-expression">
-      Match expression
+      Выражение Match
       <a class="php8-rfc" href="https://wiki.php.net/rfc/match_expression_v2">RFC</a>
     </h2>
     <div class="php8-compare__main">
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-<pre>switch (8.0) {
- case '8.0':
-   $result = "Oh no!";
-   break;
- case 8.0:
-   $result = "This is what I expected";
-   break;
+            <?php highlight_php_trimmed(
+                'switch (8.0) {
+  case \'8.0\':
+    $result = "О нет!";
+    break;
+  case 8.0:
+    $result = "То, что я и ожидал";
+    break;
 }
 echo $result;
-//> Oh no!</pre>
+//> О нет!'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-<pre>echo match (8.0) {
- '8.0' => "Oh no!",
- 8.0 => "This is what I expected",
+            <?php highlight_php_trimmed(
+                'echo match (8.0) {
+  \'8.0\' => "О нет!",
+  8.0 => "То, что я и ожидал",
 };
-//> This is what I expected</pre>
+//> То, что я и ожидал'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>The new match is similar to switch and has the following features:</p>
+      <p>Новое выражение match похоже на оператор switch со следующими особенностями:</p>
       <ul>
-        <li>Match is an expression, meaning its result can be stored in a variable or returned.</li>
-        <li>Match branches only support single-line expressions and do not need a break; statement.</li>
-        <li>Match does strict comparisons.</li>
+        <li>Match — это выражение, его результат может быть сохранён в переменной или возвращён.</li>
+        <li>Условия match поддерживают только однострочные выражения, для которых не требуется управляющая конструкция break;.</li>
+        <li>Выражение match использует строгое сравнение.</li>
       </ul>
     </div>
   </div>
 
   <div class="php8-compare">
     <h2 class="php8-h2" id="nullsafe-operator">
-      Nullsafe operator
+     Оператор Nullsafe
       <a class="php8-rfc" href="https://wiki.php.net/rfc/nullsafe_operator">RFC</a>
     </h2>
     <div class="php8-compare__main">
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-<pre>$country =  null;
+            <?php highlight_php_trimmed(
+                '$country =  null;
 
 if ($session !== null) {
- $user = $session->user;
+  $user = $session->user;
 
- if ($user !== null) {
-     $address = $user->getAddress();
-
-     if ($address !== null) {
-         $country = $address->country;
-     }
- }
-}</pre>
+  if ($user !== null) {
+    $address = $user->getAddress();
+  
+    if ($address !== null) {
+      $country = $address->country;
+    }
+  }
+}'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-          <pre>$country = $session?->user?->getAddress()?->country;</pre>
+            <?php highlight_php_trimmed(
+                '$country = $session?->user?->getAddress()?->country;'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Instead of null check conditions, you can now use a chain of calls with the new nullsafe operator. When the
-        evaluation of one element in the chain fails, the execution of the entire chain is aborted and the entire chain
-        evaluates to null.</p>
+      <p>Вместо проверки на null вы можете использовать последовательность вызовов с новым оператором Nullsafe. Когда
+       один из элементов в последовательности возвращает null, выполнение прерывается и вся последовательность
+        возвращает null.</p>
     </div>
   </div>
 
   <div class="php8-compare">
     <h2 class="php8-h2" id="saner-string-to-number-comparisons">
-      Saner string to number comparisons
+      Улучшенное сравнение строк и чисел
       <a class="php8-rfc" href="https://wiki.php.net/rfc/string_to_number_comparison">RFC</a>
     </h2>
     <div class="php8-compare__main">
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-          <pre>0 == 'foobar' // true</pre>
+            <?php highlight_php_trimmed(
+                '0 == \'foobar\' // true'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-          <pre>0 == 'foobar' // false</pre>
+            <?php highlight_php_trimmed(
+                '0 == \'foobar\' // false'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>When comparing to a numeric string, PHP 8 uses a number comparison. Otherwise, it converts the number to a
-        string and uses a string comparison.</p>
+      <p>При сравнении с числовой строкой PHP 8 использует сравнение чисел. В противном случае число преобразуется в
+        строку и используется сравнение строк.</p>
     </div>
   </div>
 
   <div class="php8-compare">
     <h2 class="php8-h2" id="consistent-type-errors-for-internal-functions">
-      Consistent type errors for internal functions
+      Ошибки согласованности типов для встроенных функций
       <a class="php8-rfc" href="https://wiki.php.net/rfc/consistent_type_errors">RFC</a>
     </h2>
     <div class="php8-compare__main">
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label">PHP 7</div>
         <div class="php8-code phpcode">
-<pre>strlen([]); // Warning: strlen() expects parameter 1 to be string, array given
+            <?php highlight_php_trimmed(
+                'strlen([]); // Warning: strlen() expects parameter 1 to be string, array given
 
-array_chunk([], -1); // Warning: array_chunk(): Size parameter expected to be greater than 0</pre>
+array_chunk([], -1); // Warning: array_chunk(): Size parameter expected to be greater than 0'
+            );?>
         </div>
       </div>
       <div class="php8-compare__arrow"></div>
       <div class="php8-compare__block example-contents">
         <div class="php8-compare__label php8-compare__label_new">PHP 8</div>
         <div class="php8-code phpcode">
-<pre>strlen([]); // TypeError: strlen(): Argument #1 ($str) must be of type string, array given
+            <?php highlight_php_trimmed(
+                'strlen([]); // TypeError: strlen(): Argument #1 ($str) must be of type string, array given
 
-array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be greater than 0</pre>
+array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be greater than 0'
+            );?>
         </div>
       </div>
     </div>
     <div class="php8-compare__content">
-      <p>Most of the internal functions now throw a Fatal Error exception if parameter validation fails.</p>
+      <p>Большинство внутренних функций теперь выбрасывают исключение Fatal Error, если при проверке параметра возникает ошибка.</p>
     </div>
   </div>
 </section>
 
 <section class="php8-section php8-section_light">
-  <h2 class="php8-h2">Just-In-Time compilation</h2>
+  <h2 class="php8-h2">Компиляция Just-In-Time</h2>
   <p>
-    PHP 8 introduces two JIT compilation engines. Tracing JIT, the most promising of the two, shows about 3 times better
-    performance on synthetic benchmarks and 1.5–2 times improvement on some specific long-running applications. Typical
-    application performance is on par with PHP 7.4.
+    PHP 8 представляет два механизма JIT-компиляции. Трассировка JIT, наиболее перспективная из них, на синтетических бенчмарках показывает
+    улучшение производительности примерно в 3 раза и в 1,5–2 раза на некоторых долго работающих приложениях. Стандартная
+    производительность приложения находится на одном уровне с PHP 7.4.
   </p>
+  <h3 class="php8-h3">
+    Relative JIT contribution to PHP 8 performance
+  </h3>
   <p>
-    <img src="/images/php8/jit.png" alt="Just-In-Time compilation">
+    <img src="/images/php8/scheme.svg" width="900" alt="Ккомпиляция Just-In-Time">
   </p>
 
-  <h2 class="php8-h2 php8-h2_margin-top">Other syntax tweaks and improvements</h2>
   <div class="php8-columns">
     <div class="php8-column">
+      <h2 class="php8-h2 php8-h2_margin-top">Улучшения в системе типов и обработке ошибок</h2>
       <ul>
         <li>
-          Allow trailing comma in parameter list <a href="https://wiki.php.net/rfc/trailing_comma_in_parameter_list">RFC</a>
-          and closure use lists <a href="https://wiki.php.net/rfc/trailing_comma_in_closure_use_list">RFC</a>.
+          Более строгие проверки типов для арифметических/побитовых операторов
+          <a href="https://wiki.php.net/rfc/arithmetic_operator_type_checks">RFC</a>
         </li>
         <li>
-          Non-capturing catches <a href="http://TODO">RFC</a>.
+          Проверка методов абстрактных трейтов <a href="https://wiki.php.net/rfc/abstract_trait_method_validation">RFC</a>
         </li>
         <li>
-          Variable Syntax Tweaks <a href="https://wiki.php.net/rfc/variable_syntax_tweaks">RFC</a>.
+          Правильные сигнатуры магических методов <a href="https://wiki.php.net/rfc/magic-methods-signature">RFC</a>
+        </li>
+        <li>
+          Реклассификация предупреждений движка <a href="https://wiki.php.net/rfc/engine_warnings">RFC</a>
+        </li>
+        <li>
+          Фатальная ошибка при несовместимости сигнатур методов <a href="https://wiki.php.net/rfc/lsp_errors">RFC</a>
+        </li>
+        <li>
+          Оператор @ больше не подавляет фатальные ошибки.
+        </li>
+        <li>
+          Наследование с private методами <a href="https://wiki.php.net/rfc/inheritance_private_methods">RFC</a>
+        </li>
+        <li>
+          Новый тип mixed <a href="https://wiki.php.net/rfc/mixed_type_v2">RFC</a>
+        </li>
+        <li>
+          Возвращаемый тип static <a href="https://wiki.php.net/rfc/static_return_type">RFC</a>
+        </li>
+        <li>
+          Типы для стандартных функций
+          <a href="https://externals.io/message/106522">RFC</a>
+        </li>
+        <li>
+          Объекты вместо ресурсов для cURL
+          <a href="https://php.watch/versions/8.0/resource-CurlHandle">RFC</a>
         </li>
       </ul>
     </div>
     <div class="php8-column">
+      <h2 class="php8-h2 php8-h2_margin-top">Прочие улучшения синтаксиса</h2>
       <ul>
         <li>
-          Treat namespaced names as single token <a href="https://wiki.php.net/rfc/namespaced_names_as_token">RFC</a>.
+          Разрешена запятая в конце списка параметров <a href="https://wiki.php.net/rfc/trailing_comma_in_parameter_list">RFC</a>
+          и в списке use замыканий <a href="https://wiki.php.net/rfc/trailing_comma_in_closure_use_list">RFC</a>
         </li>
         <li>
-          Throw expression <a href="https://wiki.php.net/rfc/throw_expression">RFC</a>.
+          Блок catch без указания переменной <a href="https://wiki.php.net/rfc/non-capturing_catches">RFC</a>
         </li>
         <li>
-          Allow ::class on objects <a href="https://wiki.php.net/rfc/class_name_literal_on_object">RFC</a>.
+          Изменения синтаксиса переменных <a href="https://wiki.php.net/rfc/variable_syntax_tweaks">RFC</a>
+        </li>
+        <li>
+          Имена в пространстве имен рассматриваются как единый токен <a href="https://wiki.php.net/rfc/namespaced_names_as_token">RFC</a>
+        </li>
+        <li>
+          Выражение Throw <a href="https://wiki.php.net/rfc/throw_expression">RFC</a>
+        </li>
+        <li>
+          Добавление ::class для объектов <a href="https://wiki.php.net/rfc/class_name_literal_on_object">RFC</a>
         </li>
       </ul>
-    </div>
-  </div>
-  <div class="php8-columns">
-    <div class="php8-column">
-      <h2 class="php8-h2 php8-h2_margin-top">Type system and error handling improvements</h2>
+
+      <h2 class="php8-h2 php8-h2_margin-top">Новые классы, интерфейсы и функции</h2>
       <ul>
         <li>
-          Saner string to number comparisons <a href="https://wiki.php.net/rfc/string_to_number_comparison">RFC</a>.
+          Класс <a href="https://wiki.php.net/rfc/weak_maps">Weak Map</a>
         </li>
         <li>
-          Stricter type checks for arithmetic/bitwise operators
-          <a href="https://wiki.php.net/rfc/arithmetic_operator_type_checks">RFC</a>.
-        </li>
-        <li>
-          Abstract trait method validation <a href="http://TODO">RFC</a>.
-        </li>
-        <li>
-          Correct signatures of magic methods <a href="https://wiki.php.net/rfc/magic-methods-signature">RFC</a>
-        </li>
-        <li>
-          Reclassified engine warnings <a href="https://wiki.php.net/rfc/engine_warnings">RFC</a>.
-        </li>
-        <li>
-          Fatal error for incompatible method signatures <a href="https://wiki.php.net/rfc/lsp_errors">RFC</a>.
-        </li>
-        <li>
-          The @ operator no longer silences fatal errors.
-        </li>
-        <li>
-          Inheritance with private methods <a href="https://wiki.php.net/rfc/inheritance_private_methods">RFC</a>.
-        </li>
-        <li>
-          Mixed type <a href="https://wiki.php.net/rfc/mixed_type_v2">RFC</a>.
-        </li>
-        <li>
-          Static return type <a href="">RFC</a>.
-        </li>
-        <li>
-          Types for internal functions
-          <a href="https://externals.io/message/106522">RFC</a>.
-        </li>
-        <li>
-          Curl objects instead of resources
-          <a href="https://php.watch/versions/8.0/resource-CurlHandle">RFC</a>.
-        </li>
-      </ul>
-    </div>
-    <div class="php8-column">
-      <h2 class="php8-h2 php8-h2_margin-top">New Classes, Interfaces, and Functions</h2>
-      <ul>
-        <li>
-          <a href="https://wiki.php.net/rfc/weak_maps">Weak Map</a> class
-        </li>
-        <li>
-          <a href="https://wiki.php.net/rfc/stringable">Stringable</a> interface
+          Интерфейс <a href="https://wiki.php.net/rfc/stringable">Stringable</a>
         </li>
         <li>
           <a href="https://wiki.php.net/rfc/str_contains">str_contains()</a>,
@@ -443,7 +462,7 @@ array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be
           <a href="https://github.com/php/php-src/pull/5427">get_resource_id()</a>
         </li>
         <li>
-          <a href="https://wiki.php.net/rfc/token_as_object">token_get_all()</a> object implementation
+          Объектно-ориентированная функция <a href="https://wiki.php.net/rfc/token_as_object">token_get_all()</a>
         </li>
       </ul>
     </div>
@@ -453,22 +472,20 @@ array_chunk([], -1); // ValueError: array_chunk(): Argument #2 ($length) must be
 <section class="php8-section php8-section_dark php8-section_footer php8-footer">
   <div class="php8-section__content">
     <h2 class="php8-h2 center">
-      Get free performance improvement.<br class="display-none-lg display-block-md">
-      Get better syntax.<br class="display-block-lg display-none-md display-block-sm">
-      Get more type safety.
+      Выше производительность, лучше синтаксис, надежнее система типов.
     </h2>
     <div class="php8-button-wrapper center">
-      <a class="php8-button php8-button_light" href="#">Переходите на PHP 8!</a>
+      <a class="php8-button php8-button_light" href="/downloads">Переходите на PHP 8!</a>
     </div>
     <div class="php8-footer__content">
       <p>
-        For source downloads of PHP 8 please visit the <a href="http://www.php.net/downloads">downloads</a> page.
-        Windows binaries can be found on the <a href="http://windows.php.net/download">PHP for Windows</a> site.
-        The list of changes is recorded in the <a href="http://www.php.net/ChangeLog-8.php">ChangeLog</a>.
+        Для загрузки исходного кода PHP 8 посетите страницу <a href="http://www.php.net/downloads">downloads</a>.
+        Бинарные файлы Windows находятся на сайте <a href="http://windows.php.net/download">PHP для Windows</a>.
+        Список изменений представлен в <a href="http://www.php.net/ChangeLog-8.php">ChangeLog</a>.
       </p>
       <p>
-        The <a href="http://php.net/manual/en/migration8.php">migration guide</a> is available in the PHP Manual. Please
-        consult it for a detailed list of new features and backward-incompatible changes.
+        <a href="/manual/ru/migration80.php">Руководство по миграции</a> доступно в разделе документации. Пожалуйста,
+        изучите его для получения подробного списка новых возможностей и обратно несовместимых изменений.
       </p>
     </div>
   </div>

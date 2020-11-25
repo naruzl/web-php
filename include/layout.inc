@@ -46,6 +46,17 @@ function highlight_php($code, $return = FALSE)
     else { echo $highlighted; }
 }
 
+// Same as highlight_php() but does not require '<?php' in $code
+function highlight_php_trimmed($code, $return = false)
+{
+    $code = "<?php\n" . $code;
+    $highlighted_code = highlight_php($code, true);
+    $highlighted_code = preg_replace("/\&lt;\?php(\<br \/\>)+/", '', $highlighted_code, 1);
+
+    if ($return) { return $highlighted_code; }
+    else { echo $highlighted_code; }
+}
+
 // Stats pages still need this
 function commonHeader($title) { site_header($title); }
 
@@ -698,16 +709,12 @@ function doc_toc_title($lang, $index, $file, $elm = "dt") {
 function release_language_chooser($currentlang) {
     $LANGUAGES = array(
         'en'    => 'English',
-//        'pt_BR' => 'Brazilian Portuguese',
-//        'zh'    => 'Chinese (Simplified)',
+        'pt_BR' => 'Brazilian Portuguese',
         'nl'    => 'Dutch',
-//        'fr'    => 'French',
-//        'de'    => 'German',
         'ru'    => 'Russian',
     );
 
     // Print out the form with all the options
-    $othersel = ' selected="selected"';
     $format_options = function () use ($currentlang, $LANGUAGES) {
         $out = '';
         $tab = str_repeat('  ', 6);
